@@ -65,7 +65,7 @@ async function execute(message, serverQueue) {
         try {
             var connection = await voiceChannel.join();
             queueConstruct.connection = connection;
-            play(message.guild, queueConstruct.songs[0]);
+            play(message, queueConstruct.songs[0]);
         } catch (e) {
             console.log(e);
             queue.delete(message.guild.id);
@@ -74,37 +74,44 @@ async function execute(message, serverQueue) {
     } else {
         serverQueue.songs.push(song);
         console.log(serverQueue.songs);
-        return message.channel.send(`${song.url} has been added to the queue`);
+        return message.channel.send(`${song.title} has been added to the queue ⏳`);
     }
 }
 
-function play(guild, song) {
+function play(message, song) {
 
-    const serverQueue = queue.get(guild.id);
-    if (!song) { return ; }
-    
+    const serverQueue = queue.get(message.guild.id);
+    if (!song) {
+        message.member.voiceChannel.leave();
+        queue.delete(message.guild.id);
+        return ; 
+    }
+    message.channel.send(`Now playing ${song.title} ▶`);
+
     const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
         .on('end', () => {
             console.log('Music ended');
             serverQueue.songs.shift();
-            play(guild, serverQueue.songs[0]);
+            play(message, serverQueue.songs[0]);
         })
-        .on('error', () => {
+        .on('error', (error) => {
             console.error(error);
         });
-    dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
+    dispatcher.setVolumeLogarithmic(serverQueue.volume / 10);
 }
 
 function skip(message, serverQueue) {
     if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to skip a song');
     if (!serverQueue) return message.channel.send('There is no song to skip');
     serverQueue.connection.dispatcher.end();
+    return message.channel.send("Skipped song ⏭");
 }
 
 function stop(message, serverQueue) {
     if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music');
     serverQueue.songs = [];
     serverQueue.connection.dispatcher.end();
+    return message.channel.send("Stopped playing ⏹");
 }
 
 client.login(token);
