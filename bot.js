@@ -89,13 +89,13 @@ function play(message, song) {
     message.channel.send(`Now playing ${song.title} ▶`);
 
     const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+        .on('error', (error) => {
+            console.error(error);
+        })
         .on('end', () => { 
             console.log('Music ended');
             serverQueue.songs.shift();
             play(message, serverQueue.songs[0]);
-        })
-        .on('error', (error) => {
-            console.error(error);
         });
     dispatcher.setVolumeLogarithmic(serverQueue.volume / 10);
 }
