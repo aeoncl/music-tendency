@@ -89,7 +89,7 @@ function play(message, song) {
     message.channel.send(`Now playing ${song.title} ▶`);
 
     const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
-        .on('end', () => {
+        .on('end', () => { 
             console.log('Music ended');
             serverQueue.songs.shift();
             play(message, serverQueue.songs[0]);
