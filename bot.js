@@ -8,7 +8,7 @@ const token = process.env.BOT_TOKEN;
 client.once('ready', () => { console.log('Ready'); });
 client.once('reconnecting', () => { console.log('Reconnecting'); });
 client.once('disconnect', () => { console.log('Disconnect'); });
-
+client.on('debug', console.log);
 client.on('message', async message => {
 
     if (message.author.bot) return;
