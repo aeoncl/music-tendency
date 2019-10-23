@@ -1,8 +1,9 @@
 const Discord = require('discord.js');
-const prefix = require('./config.json');
+const cfg = require('./config.json');
 const ytdl = require('ytdl-core');
 const client = new Discord.Client;
 const queue = new Map();
+const token = process.env.BOT_TOKEN;
 
 client.once('ready', () => { console.log('Ready'); });
 client.once('reconnecting', () => { console.log('Reconnecting'); });
@@ -11,15 +12,15 @@ client.once('disconnect', () => { console.log('Disconnect'); });
 client.on('message', async message => {
 
     if (message.author.bot) return;
-    if (!message.content.startsWith(prefix)) return;
+    if (!message.content.startsWith(cfg.prefix)) return;
 
     const serverQueue = queue.get(message.guild.id);
 
-    if (message.content.startsWith(`${prefix}play`)) {
+    if (message.content.startsWith(`${cfg.prefix}play`)) {
         execute(message, serverQueue);
-    } else if (message.content.startsWith(`${prefix}skip`)) {
+    } else if (message.content.startsWith(`${cfg.prefix}skip`)) {
         skip(message, serverQueue);
-    } else if (message.content.startsWith(`${prefix}stop`) || message.content.startsWith(`${prefix}leave`)) {
+    } else if (message.content.startsWith(`${cfg.prefix}stop`) || message.content.startsWith(`${cfg.prefix}leave`)) {
         stop(message, serverQueue);
         return;
     } else {
@@ -106,4 +107,4 @@ function stop(message, serverQueue) {
     serverQueue.connection.dispatcher.end();
 }
 
-client.login(process.env.BOT_TOKEN);
+client.login(token);
