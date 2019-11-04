@@ -59,7 +59,7 @@ async function execute(message, serverQueue) {
         playlistItems.forEach(item => playlistSongs.push({ title: item.title, url: item.url_simple }));
     } else {
         const songInfo = await ytdl.getInfo(match[2]);
-        song = { title: songInfo.title, url: songInfo.video_url }
+        song = songInfo;
     }
     
     if (!serverQueue) {
@@ -112,7 +112,7 @@ function play(message, song) {
     }
     message.channel.send(`Now playing ${song.title} ▶`);
 
-    const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+    const dispatcher = serverQueue.connection.playStream(ytdl.downloadFromInfo(song))
         .on('error', (error) => {
             console.error(error);
         })
