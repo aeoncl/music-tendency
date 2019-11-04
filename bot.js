@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const cfg = require('./config.json');
 const ytdl = require('ytdl-core');
+const ytpl = require('ytpl');
 const client = new Discord.Client;
 const queue = new Map();
 const token = process.env.BOT_TOKEN;
@@ -23,6 +24,9 @@ client.on('message', async message => {
     } else if (message.content.startsWith(`${cfg.prefix}stop`) || message.content.startsWith(`${cfg.prefix}leave`)) {
         stop(message, serverQueue);
         return;
+    } else if (message.content.startsWith(`${cfg.prefix}playlist`)) {
+        addPlaylistToQueue(message, serverQueue);
+
     } else {
         message.channel.send('Invalid command');
     }
@@ -31,6 +35,7 @@ client.on('message', async message => {
 async function execute(message, serverQueue) {
     
     var match = message.content.match(/(!play\s)([^\s].+)/);
+    var isPlaylist = ytpl.validateURL(match[2]);
     if (match === null) {
         return message.channel.send("Couldn't parse URL - check for extra whitespaces");
     }
@@ -45,9 +50,18 @@ async function execute(message, serverQueue) {
         return message.channel.send('Missing permissions to join the voicechannel & play music');
     }
 
-    const songInfo = await ytdl.getInfo(match[2]);
-    const song = { title: songInfo.title, url: songInfo.video_url }
-
+    let playlistSongs = [];
+    let song;
+    if (isPlaylist) {
+        let id = message.content.match(/(.+list=)([^&]+)/)[2];
+        const playlistInfo = await ytpl(id);
+        const playlistItems = playlistInfo['items'];
+        playlistItems.forEach(item => playlistSongs.push({ title: item.title, url: item.url_simple }));
+    } else {
+        const songInfo = await ytdl.getInfo(match[2]);
+        song = { title: songInfo.title, url: songInfo.video_url }
+    }
+    
     if (!serverQueue) {
 
         const queueConstruct = {
@@ -60,7 +74,12 @@ async function execute(message, serverQueue) {
         };
 
         queue.set(message.guild.id, queueConstruct);
-        queueConstruct.songs.push(song);
+
+        if (isPlaylist) { 
+            playlistSongs.forEach(playlistSong => queueConstruct.songs.push(playlistSong));
+        } else { 
+            queueConstruct.songs.push(song); 
+        }
 
         try {
             var connection = await voiceChannel.join();
@@ -72,9 +91,14 @@ async function execute(message, serverQueue) {
             return message.channel.send(e);
         }
     } else {
-        serverQueue.songs.push(song);
-        console.log(serverQueue.songs);
-        return message.channel.send(`${song.title} has been added to the queue ⏳`);
+        if (isPlaylist) {
+            playlistSongs.forEach(playlistSong => serverQueue.songs.push(playlistSong));
+            return message.channel.send(`${playlistSongs.length} songs have been added to the queue ⏳`);
+        } else {
+            serverQueue.songs.push(song);
+            console.log(serverQueue.songs);
+            return message.channel.send(`${song.title} has been added to the queue ⏳`);
+        } 
     }
 }
 
