@@ -35,6 +35,8 @@ client.on('message', async message => {
     }
 });
 
+
+
 async function execute(message, serverQueue) {
     
     var match = message.content.match(/(!play\s)(https:\/\/.+)/);
@@ -86,7 +88,11 @@ async function execute(message, serverQueue) {
         }
 
         try {
+
             var connection = await voiceChannel.join();
+            
+            voiceChannel.members.get(client.user.id).setDeaf(true);
+
             queueConstruct.connection = connection;
             play(message, queueConstruct.songs[0]);
         } catch (e) {
@@ -110,13 +116,22 @@ function play(message, song) {
 
     const serverQueue = queue.get(message.guild.id);
     if (!song) {
+
+        client.user.setPresence({ game: { name: `🎵 Tendency` }, status: 'idle' });
+
         message.member.voiceChannel.leave();
         queue.delete(message.guild.id);
         return ; 
     }
+
     message.channel.send(`Now playing ${song.title} ▶`);
 
-    const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+    client.user.setPresence({ game: { name: `🎵 ${song.title}` }, status: 'online' });
+
+    let dlOptions = {quality: "highestaudio", filter: "audioonly"};
+    let streamOptions = {bitrate: 256000};
+
+    const dispatcher = serverQueue.connection.playStream(ytdl(song.url, dlOptions), streamOptions)
         .on('error', (error) => {
             console.error(error);
         })
