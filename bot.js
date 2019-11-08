@@ -19,35 +19,40 @@ client.on('message', async message => {
 
     if (message.content.startsWith(`${cfg.prefix}play`)) {
         execute(message, serverQueue);
+        return;
     } else if (message.content.startsWith(`${cfg.prefix}skip`)) {
         skip(message, serverQueue);
-    } else if (message.content.startsWith(`${cfg.prefix}stop`) || message.content.startsWith(`${cfg.prefix}leave`)) {
+        return;
+    } else if (message.content.startsWith(`${cfg.prefix}stop`)) {
         stop(message, serverQueue);
         return;
-    } else if (message.content.startsWith(`${cfg.prefix}playlist`)) {
-        addPlaylistToQueue(message, serverQueue);
-
-    } else {
-        message.channel.send('Invalid command');
+    } else if (message.content.startsWith(`${cfg.prefix}queue`)) {
+        displayQueue(message, serverQueue);
+        return;
+    } else if (message.content.startsWith(`${cfg.prefix}clear`)) {
+        clearQueue(message, serverQueue);
+        return;
     }
 });
 
+
+
 async function execute(message, serverQueue) {
     
-    var match = message.content.match(/(!play\s)([^\s].+)/);
+    var match = message.content.match(/(!play\s)(https:\/\/.+)/);
     var isPlaylist = ytpl.validateURL(match[2]);
     if (match === null) {
-        return message.channel.send("Couldn't parse URL - check for extra whitespaces");
+        return message.channel.send("Couldn't parse URL - check for extra whitespaces ¯\\_(ツ)_/¯");
     }
 
     const voiceChannel = message.member.voiceChannel;
     if (!voiceChannel) {
-        return message.channel.send('You need to be in a voice channel to play music');
+        return message.channel.send('You need to be in a voice channel to play music ¯\\_(ツ)_/¯');
     }
 
     const permissions = voiceChannel.permissionsFor(message.client.user);
     if (!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return message.channel.send('Missing permissions to join the voicechannel & play music');
+        return message.channel.send('Missing permissions to join the voicechannel & play music ¯\\_(ツ)_/¯');
     }
 
     let playlistSongs = [];
@@ -77,12 +82,17 @@ async function execute(message, serverQueue) {
 
         if (isPlaylist) { 
             playlistSongs.forEach(playlistSong => queueConstruct.songs.push(playlistSong));
+            message.channel.send(`${playlistSongs.length} songs have been added to the queue ⏳`);
         } else { 
             queueConstruct.songs.push(song); 
         }
 
         try {
+
             var connection = await voiceChannel.join();
+            
+            voiceChannel.members.get(client.user.id).setDeaf(true);
+
             queueConstruct.connection = connection;
             play(message, queueConstruct.songs[0]);
         } catch (e) {
@@ -106,13 +116,22 @@ function play(message, song) {
 
     const serverQueue = queue.get(message.guild.id);
     if (!song) {
+
+        client.user.setPresence({ game: { name: `🎵 Tendency` }, status: 'idle' });
+
         message.member.voiceChannel.leave();
         queue.delete(message.guild.id);
         return ; 
     }
+
     message.channel.send(`Now playing ${song.title} ▶`);
 
-    const dispatcher = serverQueue.connection.playStream(ytdl(song.url))
+    client.user.setPresence({ game: { name: `🎵 ${song.title}` }, status: 'online' });
+
+    let dlOptions = {quality: "highestaudio", filter: "audioonly"};
+    let streamOptions = {bitrate: 256000};
+
+    const dispatcher = serverQueue.connection.playStream(ytdl(song.url, dlOptions), streamOptions)
         .on('error', (error) => {
             console.error(error);
         })
@@ -125,17 +144,43 @@ function play(message, song) {
 }
 
 function skip(message, serverQueue) {
-    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to skip a song');
-    if (!serverQueue) return message.channel.send('There is no song to skip');
+    if (!serverQueue) return message.channel.send("There is no song to skip ¯\\_(ツ)_/¯");
+    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to skip a song ¯\\_(ツ)_/¯');
     serverQueue.connection.dispatcher.end();
     return message.channel.send("Skipped song ⏭");
 }
 
 function stop(message, serverQueue) {
-    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music');
+    if (!serverQueue) return message.channel.send("There is no music to stop ¯\\_(ツ)_/¯");
+    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to stop the music ¯\\_(ツ)_/¯');
     serverQueue.songs = [];
     serverQueue.connection.dispatcher.end();
     return message.channel.send("Stopped playing ⏹");
+}
+
+function displayQueue(message, serverQueue) {
+    if (!serverQueue || serverQueue.songs.length == 0) return message.channel.send("The queue is currently empty ¯\\_(ツ)_/¯");
+    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to display the queue ¯\\_(ツ)_/¯');
+
+    let queue = "Coming up next ⏳\n";
+    queue += "--------------------------\n";
+    for(var i = 0; i < 10 && serverQueue.songs[i]; ++i) {
+        queue += (i == 0) ? "▶ " : (i+1)+") ";
+        queue += serverQueue.songs[i].title+"\n";
+    }
+    let rest = serverQueue.songs.length - i;
+    if (rest > 0) {
+        queue += "--------------------------\n";
+        queue += "... and "+rest+" more 🦀🎶";
+    }
+    return message.channel.send(queue);
+}
+
+function clearQueue(message, serverQueue) {
+    if (!serverQueue || serverQueue.songs.length == 0) return message.channel.send("The queue is currently empty ¯\\_(ツ)_/¯");
+    if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to clear the queue ¯\\_(ツ)_/¯');
+    serverQueue.songs = [];
+    return message.channel.send("Cleared the queue 🗑️");
 }
 
 client.login(token);
