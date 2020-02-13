@@ -35,8 +35,6 @@ client.on('message', async message => {
     }
 });
 
-
-
 async function execute(message, serverQueue) {
     
     var match = message.content.match(/(!play\s)(https:\/\/.+)/);
