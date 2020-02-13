@@ -32,6 +32,8 @@ client.on('message', async message => {
     } else if (message.content.startsWith(`${cfg.prefix}clear`)) {
         clearQueue(message, serverQueue);
         return;
+    } else if (message.content.startsWith(`${cfg.prefix}help`)) {
+        displayHelp(message);
     }
 });
 
@@ -179,6 +181,19 @@ function clearQueue(message, serverQueue) {
     if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to clear the queue ¯\\_(ツ)_/¯');
     serverQueue.songs = [];
     return message.channel.send("Cleared the queue 🗑️");
+}
+
+function displayHelp(message) {
+    let helpMsg = "";
+    helpMsg += "Available commands : ℹ️\n";
+    helpMsg += "ℹ️ !help\n";
+    helpMsg += "▶ !play <youtube_url>\n";
+    helpMsg += "⏭ !skip\n";
+    helpMsg += "⏹ !stop\n";
+    helpMsg += "⏳ !queue\n";
+    helpMsg += "🗑️ !clear\n";
+
+    return message.channel.send(helpMsg);
 }
 
 client.login(token);
