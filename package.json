@@ -7,7 +7,8 @@
     "discord.js": "*",
     "ffmpeg": "*",
     "opusscript": "*",
-    "ytdl-core": "*"
+    "ytdl-core": "*",
+    "ytpl": "*"
   },
   "devDependencies": {},
   "scripts": {
