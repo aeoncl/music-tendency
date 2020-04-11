@@ -2,10 +2,11 @@ const Discord = require('discord.js');
 const cfg = require('./config.json');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
+require('dotenv').config();
+
 const client = new Discord.Client;
 const queue = new Map();
-//const token = process.env.BOT_TOKEN;
-const token = "";
+const token = process.env.BOT_TOKEN;
 
 client.once('ready', () => { console.log('Ready'); });
 client.once('reconnecting', () => { console.log('Reconnecting'); });
@@ -63,8 +64,8 @@ async function execute(message, serverQueue) {
         playlistItems.forEach(item => playlistSongs.push({ title: item.title, url: item.url_simple }));
     } else {
         let test = match[2];
-        const songInfo = await ytdl.getInfo(test);
-        song = { title: songInfo.title, url: songInfo.video_url }
+        //const songInfo = await ytdl.getInfo(test);
+        song = { title: "", url: test }
     }
     
     if (!serverQueue) {

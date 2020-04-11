@@ -10,7 +10,7 @@ import { BotPermissionError } from "./Exceptions/BotPermissionsError";
 import { MessageSenderHelper } from "./Models/MessageSenderHelper";
 import "./Env/env";
 
-const token = process.env.DISCORD_BOT_TOKEN;
+const token = process.env.BOT_TOKEN;
 const client = new Client();
 const musicTendency = new MusicTendency();
 

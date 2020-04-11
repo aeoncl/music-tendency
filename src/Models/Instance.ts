@@ -36,8 +36,8 @@ export class Instance{
     
             let dlOptions = {quality: "highestaudio", filter: "audioonly"};
             let streamOptions = {bitrate: 256000};
-    
-            const dispatcher = this._connection.playStream(ytdl(song.Url, dlOptions), streamOptions)
+            const stream = ytdl(song.Url, dlOptions);
+            const dispatcher = this._connection.playStream(stream, streamOptions)
             .on('error', (error : any) => {
                 console.error(error);
             })
@@ -47,6 +47,12 @@ export class Instance{
             });
         }else{
             this._isPlaying = false;
+            this.Close();
         }
+    }
+
+    private Close(){
+        this.voiceChannel.leave();
+        this._connection = null;
     }
 }
