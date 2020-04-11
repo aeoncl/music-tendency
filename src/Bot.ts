@@ -1,4 +1,4 @@
-import {Client, DiscordAPIError, TextChannel, VoiceChannel, NewsChannel} from "discord.js";
+import {Client, DiscordAPIError, TextChannel, VoiceChannel, NewsChannel, PresenceData} from "discord.js";
 import { prefix } from "./config.json";
 import { read } from "fs";
 import {Command} from "./Models/Command";
@@ -17,6 +17,9 @@ const musicTendency = new MusicTendency();
 client.once('ready', () => { console.log('Ready'); });
 client.once('disconnect', () => { console.log('Disconnect'); });
 client.on('debug', console.log);
+
+//client.user.setPresence({ game: { name: `🎵 Battle Tendency` } , status: 'online' } as PresenceData);
+
 
 client.on('message', async message => {
 
