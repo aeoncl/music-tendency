@@ -1,0 +1,28 @@
+{
+  "name": "pingu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "*",
+    "dotenv": "latest",
+    "ffmpeg": "*",
+    "opusscript": "*",
+    "ytdl-core": "*",
+    "ytpl": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^13.11.0",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3",
+    "@types/dotenv": "^6.1.0"
+  },
+  "scripts": {
+    "watch": "tsc -w",
+    "build": "tsc -b",
+    "start": "node build/Bot.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
