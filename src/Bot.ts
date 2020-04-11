@@ -1,4 +1,4 @@
-import {Client, DiscordAPIError, TextChannel, VoiceChannel} from "discord.js";
+import {Client, DiscordAPIError, TextChannel, VoiceChannel, NewsChannel} from "discord.js";
 import { prefix } from "./config.json";
 import { read } from "fs";
 import {Command} from "./Models/Command";
@@ -15,7 +15,6 @@ const client = new Client();
 const musicTendency = new MusicTendency();
 
 client.once('ready', () => { console.log('Ready'); });
-client.once('reconnecting', () => { console.log('Reconnecting'); });
 client.once('disconnect', () => { console.log('Disconnect'); });
 client.on('debug', console.log);
 
@@ -23,10 +22,10 @@ client.on('message', async message => {
 
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-    const voiceChannel = message.member.voiceChannel;
+    const voiceChannel = message.member.voice.channel;
 
     try{
-        let command = new Command(message.content, message.author.username, message.channel, voiceChannel);
+        let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel);
 
         if(command.CommandType === CommandType.NONE){
             throw new ParseCommandError();

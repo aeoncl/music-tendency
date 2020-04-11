@@ -35,9 +35,9 @@ export class Instance{
             this._isPlaying = true;
     
             let dlOptions = {quality: "highestaudio", filter: "audioonly"};
-            let streamOptions = {bitrate: 256000};
+            let streamOptions = {bitrate: 256000, volume: 0.08, highWaterMark:1};
             const stream = ytdl(song.Url, dlOptions);
-            const dispatcher = this._connection.playStream(stream, streamOptions)
+            const dispatcher = this._connection.play(stream, streamOptions)
             .on('error', (error : any) => {
                 console.error(error);
             })
