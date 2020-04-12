@@ -57,7 +57,7 @@ export class Instance extends EventEmitter{
             let song = this._playlist.shift();
             this._isPlaying = true;
             let dlOptions = {quality: "highestaudio", filter: "audioonly"};
-            let streamOptions = {bitrate: 256000, volume: 0.1, highWaterMark:4};
+            let streamOptions = {bitrate: 256000, volume: 0.6};
             const stream = ytdl(song.Url, dlOptions);
             const dispatcher = this._connection.play(stream, streamOptions)
             .on('error', (error : any) => {
