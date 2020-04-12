@@ -46,7 +46,7 @@ export class MusicTendency{
         try{
             MessageSenderHelper.PrintLeave(command.SenderChannel as TextChannel);
             instance.Stop();
-            instance.Close();            
+            instance.Close();
         }catch(e){
             MessageSenderHelper.PrintError(e, command.SenderChannel as TextChannel);
         }
