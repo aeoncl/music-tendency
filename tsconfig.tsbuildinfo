@@ -412,6 +412,7 @@
       "inlineSourceMap": true,
       "inlineSources": true,
       "forceConsistentCasingInFileNames": true,
+      "watch": true,
       "configFilePath": "./tsconfig.json"
     },
     "referencedMap": {
@@ -1863,10 +1864,10 @@
       "./src/Models/MessageSenderHelper.ts",
       "./src/Exceptions/NoSongToSkipException.ts",
       "./src/Exceptions/NoSongToClearException.ts",
+      "./src/Models/Instance.ts",
       "./src/Exceptions/ParseCommandError.ts",
       "./src/Exceptions/BotPermissionsError.ts",
       "./src/Exceptions/InvalidYoutubeLink.ts",
-      "./src/Models/MusicTendency.ts",
       "./src/Exceptions/SenderNotInVoiceChannelError copy.ts",
       "./node_modules/dotenv/types/index.d.ts",
       "./src/Env/env.ts",
@@ -1874,7 +1875,7 @@
       "./src/Env/ErrorReporter.ts",
       "./node_modules/@types/color-name/index.d.ts",
       "./node_modules/@types/dotenv/index.d.ts",
-      "./src/Models/Instance.ts"
+      "./src/Models/MusicTendency.ts"
     ]
   },
   "version": "3.8.3"
