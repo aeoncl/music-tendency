@@ -80,7 +80,7 @@ export class Instance extends EventEmitter{
 
     private SetupAutodesctruction(){
         console.log("Autodestruct timer setup");
-        this._destructionTimer = setTimeout(() => this.Close(), 300000);
+        this._destructionTimer = setTimeout(() => this.Close(), 900000);
     }
 
     Skip() : boolean{

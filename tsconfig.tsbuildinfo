@@ -350,7 +350,7 @@
         "signature": "4be7ef2984d07920d009ce7563f5a40ef3a070a991092724be174007edf44cf3"
       },
       "./src/Models/Instance.ts": {
-        "version": "d30a2d5be62f5a73d94d3b7e8e1b2641171ba372cd04c94dc7aa9069b2fa5736",
+        "version": "78db0dbea1a48ca28775d360138decb2bc67e58e41e6dda2aeae60c26c02c914",
         "signature": "53b644662c9c52e9a7b1b87260d5d57a784f5d177a316299df973f101e06b2d7"
       },
       "./src/Exceptions/ParseCommandError.ts": {
@@ -1866,6 +1866,7 @@
       "./src/Exceptions/ParseCommandError.ts",
       "./src/Exceptions/BotPermissionsError.ts",
       "./src/Exceptions/InvalidYoutubeLink.ts",
+      "./src/Models/MusicTendency.ts",
       "./src/Exceptions/SenderNotInVoiceChannelError copy.ts",
       "./node_modules/dotenv/types/index.d.ts",
       "./src/Env/env.ts",
@@ -1873,8 +1874,7 @@
       "./src/Env/ErrorReporter.ts",
       "./node_modules/@types/color-name/index.d.ts",
       "./node_modules/@types/dotenv/index.d.ts",
-      "./src/Models/Instance.ts",
-      "./src/Models/MusicTendency.ts"
+      "./src/Models/Instance.ts"
     ]
   },
   "version": "3.8.3"
