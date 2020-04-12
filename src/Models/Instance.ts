@@ -7,6 +7,10 @@ import util, { inherits } from 'util';
 import { stringify } from "querystring";
 import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
+import {promisify} from "util";
+import fs from "fs";
+import { resolve } from "dns";
+import { rejects } from "assert";
 
 const ytdl = require('ytdl-core');
 
@@ -39,15 +43,16 @@ export class Instance extends EventEmitter{
 
     private async Play(){
 
+        if(this._destructionTimer !== null){
+            clearTimeout(this._destructionTimer);
+            console.log("Timer abort");
+        }
+
         if(this._playlist.length > 0){
 
             if(this._connection === null){
                 this._connection = await this.voiceChannel.join();
              }
-
-            if(this._destructionTimer !== null){
-                clearTimeout(this._destructionTimer);
-            }
 
             let song = this._playlist.shift();
             this._isPlaying = true;
@@ -74,6 +79,7 @@ export class Instance extends EventEmitter{
 
 
     private SetupAutodesctruction(){
+        console.log("Autodestruct timer setup");
         this._destructionTimer = setTimeout(() => this.Close(), 300000);
     }
 
@@ -100,8 +106,32 @@ export class Instance extends EventEmitter{
     }
 
     Close(){
-        this.voiceChannel?.leave();
-        this._connection = null;
-        this.emit("closure", this.voiceChannel.id);
+            this.PlayLeavingSound().then(() => {
+                this.voiceChannel?.leave();
+                this._connection = null;
+                this.emit("closure", this.voiceChannel.id);
+            });
     }
+
+    private PlayLeavingSound() {
+
+        let playPromise = new Promise((resolve, reject) => {
+            if(this._connection === null){
+                resolve();
+            }else{
+                this._connection.play('././sounds/seeya.mp3', { volume: 1 })
+                .on('error', (error : any) => {
+                        console.error(error);
+                        resolve();
+                    })
+                    .on('speaking', (value : boolean) => { 
+                        if(!value){
+                            resolve();
+                        }
+                    });   
+            }
+
+        });
+        return playPromise;
+        }
 }

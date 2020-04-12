@@ -350,8 +350,8 @@
         "signature": "4be7ef2984d07920d009ce7563f5a40ef3a070a991092724be174007edf44cf3"
       },
       "./src/Models/Instance.ts": {
-        "version": "11b076c2ee349450bfa3b61420323f7083b4482455913990eba337300480cfd3",
-        "signature": "f68acc77747876bcbca74d3531489a866952dbfad4b854a6c7004caa6bc50290"
+        "version": "d30a2d5be62f5a73d94d3b7e8e1b2641171ba372cd04c94dc7aa9069b2fa5736",
+        "signature": "53b644662c9c52e9a7b1b87260d5d57a784f5d177a316299df973f101e06b2d7"
       },
       "./src/Exceptions/ParseCommandError.ts": {
         "version": "ec25bfafe071d6c46c92ebe7991bc648aba388feb331d0b8c3bb7b3accc231b2",
@@ -366,7 +366,7 @@
         "signature": "9427b576822f2d3d8e778a5a4bd062194644440de7ef0c44321aa9803f041668"
       },
       "./src/Models/MusicTendency.ts": {
-        "version": "553689b447ccc191eafc7d90ad36897d8005f32192529829c5ba185260743cd5",
+        "version": "66fc860f1c2e5523a88227582732494ce58062ff62fc5b1bc10eb7796b08e8e0",
         "signature": "a2a07220ffbf6da6fcdb021e54365e94ad0bdfd422bf6da8ea64fd23d60fcf53"
       },
       "./src/Exceptions/SenderNotInVoiceChannelError copy.ts": {
@@ -1056,6 +1056,8 @@
         "./src/Exceptions/NoSongToSkipException.ts",
         "./src/Exceptions/NoSongToClearException.ts",
         "./node_modules/@types/node/fs.d.ts",
+        "./node_modules/@types/node/dns.d.ts",
+        "./node_modules/@types/node/assert.d.ts",
         "./node_modules/@types/node/ts3.2/fs.d.ts",
         "./node_modules/@types/node/ts3.2/util.d.ts"
       ],
@@ -1864,7 +1866,6 @@
       "./src/Exceptions/ParseCommandError.ts",
       "./src/Exceptions/BotPermissionsError.ts",
       "./src/Exceptions/InvalidYoutubeLink.ts",
-      "./src/Models/MusicTendency.ts",
       "./src/Exceptions/SenderNotInVoiceChannelError copy.ts",
       "./node_modules/dotenv/types/index.d.ts",
       "./src/Env/env.ts",
@@ -1872,7 +1873,8 @@
       "./src/Env/ErrorReporter.ts",
       "./node_modules/@types/color-name/index.d.ts",
       "./node_modules/@types/dotenv/index.d.ts",
-      "./src/Models/Instance.ts"
+      "./src/Models/Instance.ts",
+      "./src/Models/MusicTendency.ts"
     ]
   },
   "version": "3.8.3"
