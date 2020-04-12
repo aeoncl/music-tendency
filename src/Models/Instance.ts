@@ -38,20 +38,21 @@ export class Instance extends EventEmitter{
     }
 
     private async Play(){
-        
-        if(this._connection === null){
-           this._connection = await this.voiceChannel.join();
-        }
 
-        if(this._destructionTimer !== null){
-            clearTimeout(this._destructionTimer);
-        }
-        
         if(this._playlist.length > 0){
+
+            if(this._connection === null){
+                this._connection = await this.voiceChannel.join();
+             }
+
+            if(this._destructionTimer !== null){
+                clearTimeout(this._destructionTimer);
+            }
+
             let song = this._playlist.shift();
             this._isPlaying = true;
             let dlOptions = {quality: "highestaudio", filter: "audioonly"};
-            let streamOptions = {bitrate: 256000, volume: 0.1, highWaterMark:1};
+            let streamOptions = {bitrate: 256000, volume: 0.1, highWaterMark:4};
             const stream = ytdl(song.Url, dlOptions);
             const dispatcher = this._connection.play(stream, streamOptions)
             .on('error', (error : any) => {
@@ -93,13 +94,12 @@ export class Instance extends EventEmitter{
     }
 
     Stop() {
-        this._connection?.dispatcher?.end();
         this._playlist.splice(0,this._playlist.length);
+        this._connection?.dispatcher?.end();
         this.SetupAutodesctruction();
     }
 
-
-    private Close(){
+    Close(){
         this.voiceChannel?.leave();
         this._connection = null;
         this.emit("closure", this.voiceChannel.id);

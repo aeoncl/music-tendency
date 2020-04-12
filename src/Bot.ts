@@ -28,13 +28,13 @@ client.on('message', async message => {
     const voiceChannel = message.member.voice.channel;
 
     try{
-        let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel);
+        let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel, message.guild.id);
 
         if(command.CommandType === CommandType.NONE){
             throw new ParseCommandError();
         }
 
-        if(command.CommandType !== CommandType.HELP && !voiceChannel){
+        if(command.CommandType < CommandType.HELP && !voiceChannel){
             throw new SenderNotInVoiceChannelError();
         }
 

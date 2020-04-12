@@ -6,6 +6,10 @@ export class MessageSenderHelper{
     static PrintStop(channel: TextChannel) {
         channel.send(`⏹ Stopped playing.`);
     }
+
+    static PrintLeave(channel: TextChannel) {
+        channel.send(`See you next time.`);
+    }
     
     static PrintQueue(queue: Song[], channel: TextChannel) {
         let queueOut = "Coming up next ⏳\n";

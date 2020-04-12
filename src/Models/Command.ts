@@ -16,13 +16,15 @@ export class Command{
     private _commandData : Array<String> = new Array<String>();
     private _sender : String = "";
     private _senderChannel : TextChannel | DMChannel;
+    private _guildId : String;
     private _voiceChannel? : VoiceChannel;
 
 
-    constructor(message : String, sender: String, senderChannel: TextChannel | DMChannel, targetVoiceChannel : VoiceChannel){
+    constructor(message : String, sender: String, senderChannel: TextChannel | DMChannel, targetVoiceChannel : VoiceChannel, guildId: string){
         this._senderChannel = senderChannel;
         this._sender = sender;
         this._voiceChannel = targetVoiceChannel;
+        this._guildId= guildId;
         this.TryParseCommand(message.trim());
     }
 
@@ -48,6 +50,10 @@ export class Command{
 
     get TargetVoiceChannelId(){
         return this._voiceChannel?.id;
+    }
+
+    get GuildId(){
+        return this._guildId;
     }
 
     GetCommandDataById(id : number) : String{

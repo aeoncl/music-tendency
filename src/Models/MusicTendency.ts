@@ -32,11 +32,26 @@ export class MusicTendency{
                 case CommandType.QUEUE:
                     this.Queue(command);
                     break
+                case CommandType.LEAVE:
+                    this.Leave(command);
+                    break;
                 case CommandType.CLEAR:
                     this.Clear(command);
                     break;
             }
     }
+
+    Leave(command: Command) {
+        let instance = this.GetInstanceForCommand(command);
+        try{
+            MessageSenderHelper.PrintLeave(command.SenderChannel as TextChannel);
+            instance.Stop();
+            instance.Close();            
+        }catch(e){
+            MessageSenderHelper.PrintError(e, command.SenderChannel as TextChannel);
+        }
+    }
+
     Stop(command: Command) {
         let instance = this.GetInstanceForCommand(command);
         try{
@@ -115,7 +130,7 @@ export class MusicTendency{
 
 
     private GetInstanceForCommand(command : Command){
-        let instanceId = command.TargetVoiceChannelId;
+        let instanceId = command.GuildId;
         if(!this._instances.has(instanceId)){
             let instance = new Instance(command.TargetVoiceChannel);
             instance.on('closure', (a) => {this._instances.delete(a)});
