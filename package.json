@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "@types/ws": "^7.2.3",
     "discord.js": "^12.1.1",
     "dotenv": "latest",
     "node-opus": "^0.3.3",
@@ -12,6 +11,7 @@
     "ytpl": "^0.1.20"
   },
   "devDependencies": {
+    "@types/ws": "^7.2.3",
     "@types/node": "^13.11.0",
     "nodemon": "^2.0.2",
     "ts-node": "^8.8.2",
