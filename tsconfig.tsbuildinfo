@@ -354,8 +354,8 @@
         "signature": "7c106f831d3cd2eaf631bada18d552c62f3589d590182d39558b668567165ecb"
       },
       "./src/Models/Instance.ts": {
-        "version": "0bad06caa3de6f33ef8b5e7739ff70c8a897e6cd6a62132a40495e69a4e458e0",
-        "signature": "704a2cd2a574f73052497f80ca257d1a23331198404d302b95225de7bd16225e"
+        "version": "a0a1b3ae4e9dc8090dd7673f73ef149e9d9a7e3e430732869123279a5843133f",
+        "signature": "dd8574c5b280d75694fffe30b12c8512f3741d62707b5bed4d43b2617283ad6e"
       },
       "./src/Exceptions/InvalidYoutubeLink.ts": {
         "version": "15bf612f087c5e99ab49d2d3308b75a8e383e699667c0f3f50cc0a645df285fe",

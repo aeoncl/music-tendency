@@ -107,8 +107,15 @@ export class Instance extends EventEmitter{
     }
 
     private PlayLeavingSound(){
-        return this.PlaySound(new Song("seeya", "././sounds/seeya.ogg", "nothing", new MusicFileStreamProvider()), { volume: 0.5});
+        let randomId = this.getRandomInt(4);
+        return this.PlaySound(new Song("seeya", `././sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()), { volume: 0.5});
     }
+
+    private getRandomInt(max : number) {
+        return Math.floor(Math.random() * Math.floor(max));
+      }
+
+
 
     private PlaySound(song: Song, streamOptions: StreamOptions) {
         let playPromise = new Promise((resolve, reject) => {
