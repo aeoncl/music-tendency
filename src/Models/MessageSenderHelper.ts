@@ -39,6 +39,9 @@ export class MessageSenderHelper{
         channel.send(`⏭ Skip song.`);
     }
 
+    WriteSongsAdded(titles : String[], duration: String,channel: TextChannel){
+        
+    }
 
     static WriteSongAdded(title: String, sender: String, channel: TextChannel) {
         channel.send(`⏳ *${title}* has been added to the queue by ${sender}.`);

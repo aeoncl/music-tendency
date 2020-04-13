@@ -1,11 +1,9 @@
-import {Client, DiscordAPIError, TextChannel, VoiceChannel, NewsChannel, PresenceData} from "discord.js";
+import {Client, TextChannel} from "discord.js";
 import { prefix } from "./config.json";
-import { read } from "fs";
 import {Command} from "./Models/Command";
 import {MusicTendency} from "./Models/MusicTendency"
 import { CommandType } from "./Models/CommandType";
-import { ParseCommandError } from "./Exceptions/ParseCommandError";
-import { SenderNotInVoiceChannelError } from "./Exceptions/SenderNotInVoiceChannelError copy";
+import { SenderNotInVoiceChannelError } from "./Exceptions/SenderNotInVoiceChannelError";
 import { BotPermissionError } from "./Exceptions/BotPermissionsError";
 import { MessageSenderHelper } from "./Models/MessageSenderHelper";
 import "./Env/env";

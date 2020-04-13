@@ -42,12 +42,11 @@ export class Instance extends EventEmitter{
         if(this._playlist.length > 0){
 
             this.AbortAutodestruction();
-
             let song = this._playlist.shift();
             this._isPlaying = true;
             let streamOptions = {bitrate: 128000, volume: 0.4};
 
-            this.PlaySound(song, streamOptions).then(async() => {
+            this.PlaySound(song, streamOptions).finally(async() => {
                 console.log('Music ended');
                 //Todo add nico
                 await this.PlayAnnouncer();
