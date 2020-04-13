@@ -1,18 +1,9 @@
-import { Command } from "./Command";
 import { Song } from "./Song";
-import { VoiceChannel } from "discord.js";
-import { MessageSenderHelper } from "./MessageSenderHelper";
+import { VoiceChannel, StreamOptions } from "discord.js";
 import {EventEmitter} from 'events';
-import util, { inherits } from 'util';
-import { stringify } from "querystring";
 import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
-import {promisify} from "util";
-import fs from "fs";
-import { resolve } from "dns";
-import { rejects } from "assert";
-
-const ytdl = require('ytdl-core');
+import { MusicFileStreamProvider } from "./Providers/MusicFileStreamProvider";
 
 export class Instance extends EventEmitter{
 
@@ -22,7 +13,7 @@ export class Instance extends EventEmitter{
     private _destructionTimer : any = null;
     constructor() {
         super();
-        this.SetupAutodesctruction();
+        this.SetupAutodestruction();
     }
 
     get IsPlaying() {
@@ -36,7 +27,7 @@ export class Instance extends EventEmitter{
     async AddSong(song : Song){
         this._playlist.push(song);
         if(!this._isPlaying){
-            await this.Play();
+            await this.PlayQueue();
         }
         return;
     }
@@ -47,34 +38,26 @@ export class Instance extends EventEmitter{
          }
     }
 
-    private async Play(){
+    private async PlayQueue(){
         if(this._playlist.length > 0){
 
             this.AbortAutodestruction();
 
             let song = this._playlist.shift();
             this._isPlaying = true;
-            let dlOptions = {quality: "highestaudio", filter: "audioonly"};
             let streamOptions = {bitrate: 256000, volume: 0.4};
-            const stream = ytdl(song.Url, dlOptions);
-            const dispatcher = this._connection?.play(stream, streamOptions)
-            .on('error', (error : any) => {
-                console.error(error);
-            })
-            .on('speaking', (value : boolean) => { 
-                if(!value){
-                    console.log('Music ended');
-                    this.Play();
-                }
+
+            this.PlaySound(song, streamOptions).then(() => {
+                console.log('Music ended');
+                this.PlayQueue();
             });
         }else{
             this._isPlaying = false;
-            this.SetupAutodesctruction();
+            this.SetupAutodestruction();
         }
 
         return;
     }
-
 
     private AbortAutodestruction(){
         if(this._destructionTimer !== null){
@@ -83,7 +66,7 @@ export class Instance extends EventEmitter{
             console.log("Timer abort");
         }
     }
-    private SetupAutodesctruction(){
+    private SetupAutodestruction(){
         if(this._destructionTimer !== null){
             this._destructionTimer.refresh();
         }else{
@@ -111,11 +94,11 @@ export class Instance extends EventEmitter{
     Stop() {
         this._playlist.splice(0,this._playlist.length);
         this._connection?.dispatcher?.end();
-        this.SetupAutodesctruction();
+        this.SetupAutodestruction();
     }
 
     Close(){
-            this.PlayLeavingSound().then(() => {
+            this.PlayLeavingSound().finally(() => {
                 let voiceChannelId = this._connection?.channel?.id;
                 this._connection?.channel?.leave();
                 this._connection = null;
@@ -123,16 +106,20 @@ export class Instance extends EventEmitter{
             });
     }
 
-    private PlayLeavingSound() {
+    private PlayLeavingSound(){
+        return this.PlaySound(new Song("seeya", "././sounds/seeya.ogg", "nothing", new MusicFileStreamProvider()), { volume: 0.5});
+    }
 
+    private PlaySound(song: Song, streamOptions: StreamOptions) {
         let playPromise = new Promise((resolve, reject) => {
             if(this._connection === null){
-                resolve();
+                reject();
             }else{
-                this._connection.play('././sounds/seeya.ogg', { volume: 0.5})
+                const stream = song.GetStream();
+                this._connection?.play(stream, streamOptions)
                 .on('error', (error : any) => {
                         console.error(error);
-                        resolve();
+                        reject();
                     })
                     .on('speaking', (value : boolean) => { 
                         if(!value){
@@ -140,7 +127,6 @@ export class Instance extends EventEmitter{
                         }
                     });   
             }
-
         });
         return playPromise;
         }

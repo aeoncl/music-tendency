@@ -2,11 +2,10 @@ import { Instance } from "./Instance";
 import { Command } from "./Command";
 import { CommandType } from "./CommandType";
 import { Song } from "./Song";
-import { ParseCommandError } from "../Exceptions/ParseCommandError";
-import { BotPermissionError } from "../Exceptions/BotPermissionsError";
 import { InvalidYoutubeLink } from "../Exceptions/InvalidYoutubeLink";
 import { MessageSenderHelper } from "./MessageSenderHelper";
 import { TextChannel } from "discord.js";
+import { YoutubeFileStreamProvider } from "./Providers/YoutubeFileStreamProvider";
 const ytpl = require('ytpl');
 const ytdl = require('ytdl-core');
 
@@ -99,7 +98,7 @@ export class MusicTendency{
 
                 for(let playlistItemId in playlistItems){
                     let item : { title: String; url_simple: String; } = playlistItems[playlistItemId];
-                    let song = new Song(item.title, item.url_simple, command.Sender);
+                    let song = new Song(item.title, item.url_simple, command.Sender , new YoutubeFileStreamProvider());
                     await instance.AddSong(song);
                     //MessageSenderHelper.WriteSongAdded(song.Title, song.Sender, command.SenderChannel as  TextChannel);
                 }
@@ -109,7 +108,7 @@ export class MusicTendency{
                     throw new InvalidYoutubeLink();
                 }
                 const songInfo = await ytdl.getInfo(url);
-                await instance.AddSong(new Song(songInfo.title, songInfo.video_url, command.Sender));
+                await instance.AddSong(new Song(songInfo.title, songInfo.video_url, command.Sender, new YoutubeFileStreamProvider()));
                 MessageSenderHelper.WriteSongAdded(songInfo.title, command.Sender, command.SenderChannel as  TextChannel);
             }
         }catch(e){

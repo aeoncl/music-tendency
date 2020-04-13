@@ -1,4 +1,4 @@
-import { TextChannel, Channel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { Song } from "./Song";
 
 export class MessageSenderHelper{

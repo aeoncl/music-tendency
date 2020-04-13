@@ -1,6 +1,8 @@
+import { IMusicStreamProvider } from "./Providers/IMusicStreamProvider";
+
 export class Song{
 
-    constructor(readonly title : String, readonly url : String, readonly sender: String){
+    constructor(readonly title : String, readonly uri : String, readonly sender: String, readonly provider:IMusicStreamProvider){
 
     }
 
@@ -8,11 +10,15 @@ export class Song{
         return this.title;
     }
 
-    get Url(){
-        return this.url;
+    get Uri(){
+        return this.uri;
     }
 
     get Sender(){
         return this.sender;
+    }
+
+    public GetStream(){
+       return this.provider.GetStreamForUri(this.Uri);
     }
 }
