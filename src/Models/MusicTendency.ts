@@ -38,6 +38,8 @@ export class MusicTendency{
                 case CommandType.CLEAR:
                     this.Clear(command);
                     break;
+                default:
+                    break;
             }
     }
 
@@ -87,7 +89,7 @@ export class MusicTendency{
     private async Play(command : Command){
         let url = command.GetCommandDataById(0);
         let instance = this.GetInstanceForCommand(command);
-        
+        await instance.JoinVocal(command.TargetVoiceChannel);
         try {
             let isPlaylist : boolean = ytpl.validateURL(url);
             if(isPlaylist){
@@ -132,8 +134,11 @@ export class MusicTendency{
     private GetInstanceForCommand(command : Command){
         let instanceId = command.GuildId;
         if(!this._instances.has(instanceId)){
-            let instance = new Instance(command.TargetVoiceChannel);
-            instance.on('closure', (a) => {this._instances.delete(a)});
+            let instance = new Instance();
+            instance.on('closure', (a) => {
+                this._instances.delete(a);
+                console.log("Closure received");
+            });
             this._instances.set(instanceId, instance);
         }
         return this._instances.get(instanceId);

@@ -31,7 +31,7 @@ client.on('message', async message => {
         let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel, message.guild.id);
 
         if(command.CommandType === CommandType.NONE){
-            throw new ParseCommandError();
+            return;
         }
 
         if(command.CommandType < CommandType.HELP && !voiceChannel){

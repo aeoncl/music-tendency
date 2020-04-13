@@ -20,7 +20,7 @@ export class Instance extends EventEmitter{
     private _isPlaying : boolean = false;
     private _connection : any = null; //to change for connection
     private _destructionTimer : any = null;
-    constructor(private voiceChannel : VoiceChannel) {
+    constructor() {
         super();
         this.SetupAutodesctruction();
     }
@@ -41,25 +41,23 @@ export class Instance extends EventEmitter{
         return;
     }
 
+    async JoinVocal(voiceChannel : VoiceChannel){
+        if(this._connection === null){
+            this._connection = await voiceChannel.join();
+         }
+    }
+
     private async Play(){
-
-        if(this._destructionTimer !== null){
-            clearTimeout(this._destructionTimer);
-            console.log("Timer abort");
-        }
-
         if(this._playlist.length > 0){
 
-            if(this._connection === null){
-                this._connection = await this.voiceChannel.join();
-             }
+            this.AbortAutodestruction();
 
             let song = this._playlist.shift();
             this._isPlaying = true;
             let dlOptions = {quality: "highestaudio", filter: "audioonly"};
-            let streamOptions = {bitrate: 256000, volume: 0.6};
+            let streamOptions = {bitrate: 256000, volume: 0.4};
             const stream = ytdl(song.Url, dlOptions);
-            const dispatcher = this._connection.play(stream, streamOptions)
+            const dispatcher = this._connection?.play(stream, streamOptions)
             .on('error', (error : any) => {
                 console.error(error);
             })
@@ -78,9 +76,20 @@ export class Instance extends EventEmitter{
     }
 
 
+    private AbortAutodestruction(){
+        if(this._destructionTimer !== null){
+            clearTimeout(this._destructionTimer);
+            this._destructionTimer = null;
+            console.log("Timer abort");
+        }
+    }
     private SetupAutodesctruction(){
+        if(this._destructionTimer !== null){
+            this._destructionTimer.refresh();
+        }else{
+            this._destructionTimer = setTimeout(() => this.Close(), 900000);
+        }
         console.log("Autodestruct timer setup");
-        this._destructionTimer = setTimeout(() => this.Close(), 900000);
     }
 
     Skip() : boolean{
@@ -107,9 +116,10 @@ export class Instance extends EventEmitter{
 
     Close(){
             this.PlayLeavingSound().then(() => {
-                this.voiceChannel?.leave();
+                let voiceChannelId = this._connection?.channel?.id;
+                this._connection?.channel?.leave();
                 this._connection = null;
-                this.emit("closure", this.voiceChannel.id);
+                this.emit("closure", voiceChannelId);
             });
     }
 
@@ -119,7 +129,7 @@ export class Instance extends EventEmitter{
             if(this._connection === null){
                 resolve();
             }else{
-                this._connection.play('././sounds/seeya.mp3', { volume: 0.5 })
+                this._connection.play('././sounds/seeya.opus', { volume: 0.5 })
                 .on('error', (error : any) => {
                         console.error(error);
                         resolve();
