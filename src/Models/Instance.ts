@@ -129,7 +129,7 @@ export class Instance extends EventEmitter{
             if(this._connection === null){
                 resolve();
             }else{
-                this._connection.play('././sounds/seeya.ogg', { volume: 0.5 })
+                this._connection.play('././sounds/seeya.ogg', { volume: 0.5})
                 .on('error', (error : any) => {
                         console.error(error);
                         resolve();
