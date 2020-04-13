@@ -62,7 +62,7 @@ export class Instance extends EventEmitter{
     }
 
     private async PlayAnnouncer(){
-        let announcerOdd = this.getRandomInt(6);
+        let announcerOdd = this.getRandomInt(10);
         let streamOptions = {bitrate: 128000, volume: 0.4};
         if(announcerOdd === 0){
             await this.PlaySound(new Song("Annonce", "././assets/sounds/announcer0.ogg", "Nicobg", new MusicFileStreamProvider()), streamOptions);
