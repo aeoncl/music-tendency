@@ -25,10 +25,10 @@ client.on('message', async message => {
 
     if (message.author.bot) return;
     if (!message.content.startsWith(prefix)) return;
-    const voiceChannel = message.member.voice.channel;
+    const voiceChannel = message.member?.voice?.channel;
 
     try{
-        let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel, message.guild.id);
+        let command = new Command(message.content, message.author.username, message.channel as TextChannel, voiceChannel, message.guild?.id);
 
         if(command.CommandType === CommandType.NONE){
             return;

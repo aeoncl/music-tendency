@@ -47,8 +47,10 @@ export class Instance extends EventEmitter{
             this._isPlaying = true;
             let streamOptions = {bitrate: 128000, volume: 0.4};
 
-            this.PlaySound(song, streamOptions).then(() => {
+            this.PlaySound(song, streamOptions).then(async() => {
                 console.log('Music ended');
+                //Todo add nico
+                await this.PlayAnnouncer();
                 this.PlayQueue();
             });
         }else{
@@ -57,6 +59,14 @@ export class Instance extends EventEmitter{
         }
 
         return;
+    }
+
+    private async PlayAnnouncer(){
+        let announcerOdd = this.getRandomInt(6);
+        let streamOptions = {bitrate: 128000, volume: 0.4};
+        if(announcerOdd === 0){
+            await this.PlaySound(new Song("Annonce", "././assets/sounds/announcer0.ogg", "Nicobg", new MusicFileStreamProvider()), streamOptions);
+        }
     }
 
     private AbortAutodestruction(){
@@ -109,7 +119,7 @@ export class Instance extends EventEmitter{
     private PlayLeavingSound(){
         let randomId = this.getRandomInt(4);
         console.log(`randomNumber: ${randomId}`);
-        return this.PlaySound(new Song("seeya", `././sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()), { volume: 0.5});
+        return this.PlaySound(new Song("seeya", `././assets/sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()), { volume: 0.5});
     }
 
     private getRandomInt(max : number) {

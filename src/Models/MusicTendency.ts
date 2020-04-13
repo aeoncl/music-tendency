@@ -37,6 +37,9 @@ export class MusicTendency{
                 case CommandType.CLEAR:
                     this.Clear(command);
                     break;
+                case CommandType.HELP:
+                    MessageSenderHelper.PrintHelp(command.SenderChannel);
+                    break;
                 default:
                     break;
             }

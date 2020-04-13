@@ -1,7 +1,11 @@
-import { TextChannel } from "discord.js";
+import { TextChannel, DMChannel } from "discord.js";
 import { Song } from "./Song";
+const fs = require("fs");
 
 export class MessageSenderHelper{
+
+    static readonly header : string = fs.readFileSync("././assets/ascii/header.txt", "ascii");
+    static readonly help : string = fs.readFileSync("././assets/ascii/help.txt", "utf8");
 
     static PrintStop(channel: TextChannel) {
         channel.send(`⏹ Stopped playing.`);
@@ -42,6 +46,11 @@ export class MessageSenderHelper{
 
     static PrintError(message : String, channel : TextChannel){
         channel.send(`${message} ¯\\_(ツ)_/¯`);
+    }
+
+    static PrintHelp(channel: TextChannel | DMChannel){
+        channel.send(`\`\`\`${this.header}\`\`\``);
+        channel.send(this.help);
     }
 
 }
