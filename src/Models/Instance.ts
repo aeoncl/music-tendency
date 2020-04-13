@@ -45,7 +45,7 @@ export class Instance extends EventEmitter{
 
             let song = this._playlist.shift();
             this._isPlaying = true;
-            let streamOptions = {bitrate: 256000, volume: 0.4};
+            let streamOptions = {bitrate: 128000, volume: 0.4};
 
             this.PlaySound(song, streamOptions).then(() => {
                 console.log('Music ended');
