@@ -4,7 +4,7 @@ import { CommandType } from "./CommandType";
 import { Song } from "./Song";
 import { InvalidYoutubeLink } from "../Exceptions/InvalidYoutubeLink";
 import { MessageSenderHelper } from "./MessageSenderHelper";
-import { TextChannel } from "discord.js";
+import { TextChannel, Message } from "discord.js";
 import { YoutubeFileStreamProvider } from "./Providers/YoutubeFileStreamProvider";
 const ytpl = require('ytpl');
 const ytdl = require('ytdl-core');
@@ -100,18 +100,18 @@ export class MusicTendency{
                 const playlistItems = playlistInfo['items'];
 
                 for(let playlistItemId in playlistItems){
-                    let item : { title: String; url_simple: String; } = playlistItems[playlistItemId];
-                    let song = new Song(item.title, item.url_simple, command.Sender , new YoutubeFileStreamProvider());
+                    let item : { title: String; url_simple: String; duration:string } = playlistItems[playlistItemId];
+                    let song = new Song(item.url_simple,item.title,item.duration, command.Sender , new YoutubeFileStreamProvider());
                     await instance.AddSong(song);
-                    //MessageSenderHelper.WriteSongAdded(song.Title, song.Sender, command.SenderChannel as  TextChannel);
                 }
+                MessageSenderHelper.WriteSongsAdded(playlistInfo, command.Sender, command.SenderChannel as TextChannel);
             }else{
                 let urlIsValid = ytdl.validateURL(url);
                 if(!urlIsValid){
                     throw new InvalidYoutubeLink();
                 }
                 const songInfo = await ytdl.getInfo(url);
-                await instance.AddSong(new Song(songInfo.title, songInfo.video_url, command.Sender, new YoutubeFileStreamProvider()));
+                await instance.AddSong(new Song(songInfo.video_url,songInfo.title,songInfo.length_seconds, command.Sender , new YoutubeFileStreamProvider()));
                 MessageSenderHelper.WriteSongAdded(songInfo.title, command.Sender, command.SenderChannel as  TextChannel);
             }
         }catch(e){

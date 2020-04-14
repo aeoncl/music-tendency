@@ -59,9 +59,9 @@ export class Instance extends EventEmitter{
     }
 
     private async PlayAnnouncer(){
-        let announcerOdd = this.getRandomInt(6);
+        let announcerOdd = this.getRandomInt(10);
         if(announcerOdd === 0){
-            await this.PlaySound(new Song("Annonce", "././assets/sounds/announcer0.ogg", "Nicobg", new MusicFileStreamProvider()));
+            await this.PlaySound(new Song("././assets/sounds/announcer0.ogg"));
         }
     }
 
@@ -115,7 +115,7 @@ export class Instance extends EventEmitter{
     private PlayLeavingSound(){
         let randomId = this.getRandomInt(4);
         console.log(`randomNumber: ${randomId}`);
-        return this.PlaySound(new Song("seeya", `././assets/sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()));
+        return this.PlaySound(new Song(`././assets/sounds/seeya${randomId}.ogg`));
     }
 
     private getRandomInt(max : number) {
