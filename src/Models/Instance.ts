@@ -6,7 +6,6 @@ import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
 import { MusicFileStreamProvider } from "./Providers/MusicFileStreamProvider";
 
 export class Instance extends EventEmitter{
-
     private _playlist : Array<Song> = [];
     private _isPlaying : boolean = false;
     private _connection : any = null; //to change for connection
@@ -44,9 +43,8 @@ export class Instance extends EventEmitter{
             this.AbortAutodestruction();
             let song = this._playlist.shift();
             this._isPlaying = true;
-            let streamOptions = {bitrate: 128000, volume: 0.4};
 
-            this.PlaySound(song, streamOptions).finally(async() => {
+            this.PlaySound(song).finally(async() => {
                 console.log('Music ended');
                 //Todo add nico
                 await this.PlayAnnouncer();
@@ -54,7 +52,7 @@ export class Instance extends EventEmitter{
             });
         }else{
             this._isPlaying = false;
-            this.SetupAutodestruction();
+            this.SetupAutodestruction(); 
         }
 
         return;
@@ -62,9 +60,8 @@ export class Instance extends EventEmitter{
 
     private async PlayAnnouncer(){
         let announcerOdd = this.getRandomInt(10);
-        let streamOptions = {bitrate: 128000, volume: 0.8};
         if(announcerOdd === 0){
-            await this.PlaySound(new Song("Annonce", "././assets/sounds/announcer0.ogg", "Nicobg", new MusicFileStreamProvider()), streamOptions);
+            await this.PlaySound(new Song("Annonce", "././assets/sounds/announcer0.ogg", "Nicobg", new MusicFileStreamProvider()));
         }
     }
 
@@ -118,20 +115,20 @@ export class Instance extends EventEmitter{
     private PlayLeavingSound(){
         let randomId = this.getRandomInt(4);
         console.log(`randomNumber: ${randomId}`);
-        return this.PlaySound(new Song("seeya", `././assets/sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()), { volume: 0.5});
+        return this.PlaySound(new Song("seeya", `././assets/sounds/seeya${randomId}.ogg`, "nothing", new MusicFileStreamProvider()));
     }
 
     private getRandomInt(max : number) {
         return Math.floor(Math.random() * Math.floor(max));
       }
 
-    private PlaySound(song: Song, streamOptions: StreamOptions) {
+    private PlaySound(song: Song) {
         let playPromise = new Promise((resolve, reject) => {
             if(this._connection === null){
                 reject();
             }else{
                 const stream = song.GetStream();
-                this._connection?.play(stream, streamOptions)
+                this._connection?.play(stream, {type: "opus"})
                 .on('error', (error : any) => {
                         console.error(error);
                         reject();

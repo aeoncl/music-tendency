@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@discordjs/opus": "^0.1.0",
+    "@types/fluent-ffmpeg": "^2.1.14",
     "discord.js": "^12.1.1",
     "dotenv": "latest",
-    "@discordjs/opus": "^0.1.0",
+    "prism-media": "^1.2.1",
     "ytdl-core": "^2.0.1",
     "ytpl": "^0.1.20"
   },
