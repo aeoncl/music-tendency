@@ -3,7 +3,6 @@ import { VoiceChannel, StreamOptions } from "discord.js";
 import {EventEmitter} from 'events';
 import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
-import { MusicFileStreamProvider } from "./Providers/MusicFileStreamProvider";
 
 export class Instance extends EventEmitter{
     private _playlist : Array<Song> = [];
@@ -128,7 +127,7 @@ export class Instance extends EventEmitter{
                 reject();
             }else{
                 const stream = song.GetStream();
-                this._connection?.play(stream, {type: "opus"})
+                this._connection?.play(stream, {type: "converted"})
                 .on('error', (error : any) => {
                         console.error(error);
                         reject();
