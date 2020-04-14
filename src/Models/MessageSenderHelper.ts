@@ -46,9 +46,13 @@ export class MessageSenderHelper{
         const songs : {duration: string, title: string}[] = playlist.items;
         let sortie = "";
         let totalSeconds = 0;
+        let count = 0;
         songs.forEach((song : any) => {
+            if(count <= 10){
              sortie += `⏳ *${song.title}* has been added to the queue by ${sender}.\n`
+            }
              totalSeconds = this.GetNbrSecondsFromString(song.duration);
+             count++;
         });
         //sortie += `Your playlist lasts ${this.SecondsToString(totalSeconds)}`;
         channel.send(sortie);

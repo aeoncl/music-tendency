@@ -127,7 +127,7 @@ export class Instance extends EventEmitter{
                 reject();
             }else{
                 const stream = song.GetStream();
-                this._connection?.play(stream, {type: "converted"})
+                this._connection?.play(stream, {type: "ogg/opus"})
                 .on('error', (error : any) => {
                         console.error(error);
                         reject();

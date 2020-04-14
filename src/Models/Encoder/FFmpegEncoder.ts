@@ -9,8 +9,9 @@ export class FFmpegEncoder implements IMusicEncoder{
 
        const transcoder = new prism.FFmpeg({
         args: [
-            '-af', 'loudnorm=I=-16:TP=-1.5:LRA=11,volume=-5dB',
-            '-f', 's16le',
+            '-af', 'loudnorm=I=-23:TP=-2:LRA=7',
+            '-c:a', 'libopus',
+            '-f', 'ogg',
             '-ar', '48000',
             '-ac', '2'
             ]
