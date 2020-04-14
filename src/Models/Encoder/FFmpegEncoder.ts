@@ -16,6 +16,6 @@ export class FFmpegEncoder implements IMusicEncoder{
             '-ac', '2'
             ]
        });
-        return stream.pipe(transcoder);
+        return stream;
     }
 }
