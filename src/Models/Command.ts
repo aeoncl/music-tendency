@@ -4,12 +4,15 @@ import { VoiceChannel, TextChannel, DMChannel } from "discord.js";
 
 export class Command{
     
-    private readonly _commands = [new RegExp(`${prefix}(play)\\s(https:\/\/.+)`), 
+    private static readonly aliases : Map<String, String[]> = new Map<String, String[]>();
+
+    private readonly _commands = [new RegExp(`${prefix}(play)\\s(.*)`), 
     new RegExp(`${prefix}(skip)`), 
     new RegExp(`${prefix}(stop)`), 
     new RegExp(`${prefix}(queue)`),
     new RegExp(`${prefix}(clear)`),
     new RegExp(`${prefix}(leave)`),
+    new RegExp(`${prefix}(replay)`),
     new RegExp(`${prefix}(help)`)];
     
     private _commandType: CommandType = CommandType.NONE;
@@ -71,7 +74,9 @@ export class Command{
                 break;
             }
         }
+    }
 
+    private GetAlias(message: String){
     }
     
 

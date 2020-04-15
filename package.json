@@ -1,16 +1,17 @@
 {
-  "name": "pingu",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "musictendency",
+  "version": "2.0.0",
+  "description": "A bot that plays music, made with love",
+  "main": "/build/Bot.js",
+  "repository": "https://github.com/D0vid/music-tendency",
   "dependencies": {
     "@discordjs/opus": "^0.1.0",
-    "@types/fluent-ffmpeg": "^2.1.14",
     "discord.js": "^12.1.1",
     "dotenv": "latest",
-    "prism-media": "^1.2.1",
+    "prism-media": "^1.2.0",
     "ytdl-core": "^2.0.1",
-    "ytpl": "^0.1.20"
+    "ytpl": "^0.1.20",
+    "ytsr": "^0.1.12"
   },
   "devDependencies": {
     "@types/ws": "^7.2.3",

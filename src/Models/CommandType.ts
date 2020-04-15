@@ -6,5 +6,6 @@ export enum CommandType {
     CLEAR = 5,
     HELP = 6,
     LEAVE = 7,
+    REPLAY = 8,
     NONE = -1
 }

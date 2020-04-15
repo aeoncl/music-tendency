@@ -1,5 +1,5 @@
 import { Song } from "./Song";
-import { VoiceChannel, StreamOptions } from "discord.js";
+import { VoiceChannel, StreamOptions, VoiceConnection } from "discord.js";
 import {EventEmitter} from 'events';
 import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
@@ -7,8 +7,10 @@ import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
 export class Instance extends EventEmitter{
     private _playlist : Array<Song> = [];
     private _isPlaying : boolean = false;
-    private _connection : any = null; //to change for connection
+    private _connection : VoiceConnection = null;
     private _destructionTimer : any = null;
+    private _currentlyPlaying : Song;
+
     constructor() {
         super();
         this.SetupAutodestruction();
@@ -20,6 +22,14 @@ export class Instance extends EventEmitter{
 
     get Queue(){
         return this._playlist;
+    }
+
+    async AddSongs(songs: Song[]){
+        this._playlist = this._playlist.concat(songs);
+        if(!this._isPlaying){
+            await this.PlayQueue();
+        }
+        return;
     }
 
     async AddSong(song : Song){
@@ -80,20 +90,18 @@ export class Instance extends EventEmitter{
         console.log("Autodestruct timer setup");
     }
 
-    Skip() : boolean{
+    Skip(){
         if(this._playlist.length === 0){
             throw new NoSongToSkipException();
         }
         this._connection?.dispatcher?.end();
-        return true;
     }
 
-    Clear() : boolean{
+    Clear(){
         if(this._playlist.length === 0){
             throw new NoSongToClearException();
         }
         this._playlist.splice(0,this._playlist.length);
-        return true
     }
 
     Stop() {
@@ -127,7 +135,7 @@ export class Instance extends EventEmitter{
                 reject();
             }else{
                 const stream = song.GetStream();
-                this._connection?.play(stream, {volume:0.5})
+                this._connection?.play(stream, {type:"unknown"})
                 .on('error', (error : any) => {
                         console.error(error);
                         reject();

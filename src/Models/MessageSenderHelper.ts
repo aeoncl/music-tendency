@@ -5,6 +5,7 @@ const fs = require("fs");
 
 export class MessageSenderHelper{
 
+
     static readonly header : string = fs.readFileSync("././assets/ascii/header.txt", "ascii");
     static readonly help : string = fs.readFileSync("././assets/ascii/help.txt", "utf8");
 
@@ -14,6 +15,10 @@ export class MessageSenderHelper{
 
     static PrintLeave(channel: TextChannel) {
         channel.send(`See you next time.`);
+    }
+
+    static WriteSpotify(channel: TextChannel) {
+        channel.send("Bip boup. Please wait while i'm automagically taking your song from Spotify. 🧙🏻‍♂️🌟");
     }
     
     static PrintQueue(queue: Song[], channel: TextChannel) {
@@ -42,16 +47,14 @@ export class MessageSenderHelper{
         channel.send(`⏭ Skip song.`);
     }
 
-    static WriteSongsAdded(playlist : any, sender: String,  channel: TextChannel){
-        const songs : {duration: string, title: string}[] = playlist.items;
+    static WriteSongsAdded(songs : Song[],  channel: TextChannel){
         let sortie = "";
-        let totalSeconds = 0;
         let count = 0;
-        songs.forEach((song : any) => {
+        songs.forEach((song : Song) => {
             if(count <= 10){
-             sortie += `⏳ *${song.title}* has been added to the queue by ${sender}.\n`
+             sortie += `⏳ *${song.title}* has been added to the queue by ${song.Sender}.\n`
             }
-             totalSeconds = this.GetNbrSecondsFromString(song.duration);
+             //totalSeconds = this.GetNbrSecondsFromString(song.duration);
              count++;
         });
         //sortie += `Your playlist lasts ${this.SecondsToString(totalSeconds)}`;
