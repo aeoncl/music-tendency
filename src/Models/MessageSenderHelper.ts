@@ -1,4 +1,4 @@
-import { TextChannel, DMChannel } from "discord.js";
+import { TextChannel, DMChannel, MessageEmbed } from "discord.js";
 import { Song } from "./Song";
 import { stringify } from "querystring";
 const fs = require("fs");
@@ -10,91 +10,125 @@ export class MessageSenderHelper{
     static readonly help : string = fs.readFileSync("././assets/ascii/help.txt", "utf8");
 
     static PrintStop(channel: TextChannel) {
-        channel.send(`⏹ Stopped playing.`);
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription("⏹ Stopped playing.");
+        channel.send(embed);
+    }
+
+    static PrintNowPlaying(song : Song){
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setTitle(song?.title)
+        .setURL(song.Uri as string)
+        .setAuthor("▶  Now Playing" , "https://i.imgur.com/l0hxro3.png" , song.Uri as string)
+        .setThumbnail(song.Thumbnail as string)
+        .addFields([
+            { name: 'Duration', value: song.DurationAsString, inline: true },
+            { name: 'Added by', value: `${song.Sender}`, inline: true }
+        ])
+        .setFooter('Music Tendency', "https://i.imgur.com/l0hxro3.png")
+        .setTimestamp(new Date());
+        song.TargetTextChannel.send(embed);
     }
 
     static PrintLeave(channel: TextChannel) {
-        channel.send(`See you next time.`);
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription("See you next time.");
+        channel.send(embed);
     }
 
-    static WriteSpotify(channel: TextChannel) {
-        channel.send("Bip boup. Please wait while i'm automagically taking your song from Spotify. 🧙🏻‍♂️🌟");
+    static async WriteSpotify(channel: TextChannel) {
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription("Bip boup. Please wait while i'm automagically taking your songs from Spotify. 🧙🏻‍♂️🌟")
+        .setImage("https://media0.giphy.com/media/QyWBTLDn9WHt0FXGJS/giphy.gif");
+        let msg = await channel.send(embed);
+        return msg;
     }
     
     static PrintQueue(queue: Song[], channel: TextChannel) {
+
+
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setAuthor("Coming up next" , "https://i.imgur.com/l0hxro3.png")
+        .setFooter('Music Tendency', "https://i.imgur.com/l0hxro3.png")
+        .setTimestamp(new Date());
+
         let totalSeconds = 0;
-        let queueOut = "Coming up next ⏳\n";
-        queueOut += "--------------------------\n";
-        let count = 0;
-        queue.forEach((song) => {
-            if(count <= 10){
-                queueOut += `${song.Title} added by ${song.sender}\n`;
+        let description = "";
+        for(let i = 0; i<queue.length;i+=1){
+            let song = queue[i];
+
+            if(i<15){
+                description+= `${i+1}. ${song.Title.substr(0,70)}\n`;
             }
-            totalSeconds += this.GetNbrSecondsFromString(song.duration);
-            count++;
-        });
-        queueOut += "--------------------------\n";
-        queueOut += "... and counting 🦀🎶";
+            totalSeconds += song.Duration;
+
+        }
+
+        description+= "... and counting 🦀🎶\n";
+
+        embed.setDescription(description);
+        embed.addFields([
+            { name: 'Song Count', value: queue.length, inline: true },
+            { name: 'Total time', value: this.GetDurationAsString(totalSeconds), inline: true}
+        ]);
+        //queueOut += "--------------------------\n";
+        //queueOut += "... and counting 🦀🎶";
       //  queueOut += `The playlist will last ${this.SecondsToString(totalSeconds)}`;
-        channel.send(queueOut);
+        return channel.send(embed);
     }
     
     static WriteClear(channel: TextChannel) {
-        channel.send(`🗑️ All clear.`);
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription("🗑️ All clear.");
+        channel.send(embed);
     }
 
     static WriteSkip(channel: TextChannel) {
-        channel.send(`⏭ Skip song.`);
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription("⏭ Skip song.");
+        channel.send(embed);
     }
 
-    static WriteSongsAdded(songs : Song[],  channel: TextChannel){
-        let sortie = "";
-        let count = 0;
-        songs.forEach((song : Song) => {
-            if(count <= 10){
-             sortie += `⏳ *${song.title}* has been added to the queue by ${song.Sender}.\n`
-            }
-             //totalSeconds = this.GetNbrSecondsFromString(song.duration);
-             count++;
-        });
-        //sortie += `Your playlist lasts ${this.SecondsToString(totalSeconds)}`;
-        channel.send(sortie);
-    }
-
-    private static GetNbrSecondsFromString(duration: String){
-        let totalSeconds = 0;
-        let durationArray = duration.split(":");
-        totalSeconds += Number.parseInt(durationArray[0]) * 60;
-        totalSeconds += Number.parseInt(durationArray[1]);
-        return totalSeconds;
-    }
-
-    private static SecondsToString(seconds: number){
-        let remainingSeconds = seconds;
-        let hours = (remainingSeconds/3600);
-        remainingSeconds = remainingSeconds - (hours*3600);
-        let minutes = remainingSeconds/60;
-        remainingSeconds = remainingSeconds - (minutes*60);
-        let secondes = remainingSeconds;
-        return hours===0?`${this.padDigits(minutes,2)}:${this.padDigits(secondes,2)}`:`${this.padDigits(hours,2)}H ${this.padDigits(minutes,2)}:${this.padDigits(secondes,2)}`
-    }
-
-
-    private static padDigits(nbr : number, digits : number) {
-        return Array(Math.max(digits - String(nbr).length + 1, 0)).join('0') + nbr;
-    }
-
-    static WriteSongAdded(title: String, sender: String, channel: TextChannel) {
-        channel.send(`⏳ *${title}* has been added to the queue by ${sender}.`);
+    static WriteSongAdded(channel: TextChannel) {
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription(`Stuff added to the queue`);
+        channel.send(embed);
     }
 
     static PrintError(message : String, channel : TextChannel){
-        channel.send(`${message} ¯\\_(ツ)_/¯`);
+        let embed = new MessageEmbed()
+        .setColor('#fc051d')
+        .setDescription(`${message} ¯\\_(ツ)_/¯`);
+        channel.send(embed);
     }
 
     static PrintHelp(channel: TextChannel | DMChannel){
-        channel.send(`\`\`\`${this.header}\`\`\``);
-        channel.send(this.help);
+        //channel.send(`\`\`\`${this.header}\`\`\``);
+        let embed = new MessageEmbed()
+        .setColor('#6300aa')
+        .setDescription(`${this.help}`);
+        channel.send(embed);
+    }
+
+
+    static GetDurationAsString(durationInSeconds : number){
+        let date = new Date(0);
+        let remaningSeconds = durationInSeconds;
+        date.setHours(remaningSeconds/3600);
+        remaningSeconds -= date.getHours() * 3600;
+        date.setMinutes(remaningSeconds/60);
+        remaningSeconds -= date.getMinutes() * 60;
+        date.setSeconds(remaningSeconds);
+        let timeString = date.toISOString().substr(11, 8);
+        return timeString;
     }
 
 }

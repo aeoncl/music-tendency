@@ -12,9 +12,9 @@ export class YoutubeSearchSongResolver implements ISongResolver{
         //type: movie, video
 
         for(let i in results.items){
-            let current : {type: string, link: string, title: string, duration: string} = results.items[i];
+            let current : {type: string, link: string, title: string, duration: string, thumbnail: string} = results.items[i];
             if(current.type === "video"){
-                songList.push(new Song(current.link, current.title, current.duration, command?.Sender, new YoutubeFileStreamProvider()));
+                songList.push(new Song(current.link, current.title, current.duration, command, current.thumbnail, new YoutubeFileStreamProvider()));
                 break;
             }
         }

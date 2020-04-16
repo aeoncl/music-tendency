@@ -49,7 +49,7 @@ export class MusicTendency{
         try {
             let listSongs = await this._songResolver.ResolveUri(command.CommandData[0], command);
             if(listSongs.length > 0){
-                MessageSenderHelper.WriteSongsAdded(listSongs, command.SenderChannel as TextChannel);
+                    MessageSenderHelper.WriteSongAdded(command.SenderChannel as TextChannel);
                 instance.AddSongs(listSongs);
             }else{
                 throw new NoMusicFound();

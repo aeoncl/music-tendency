@@ -30,9 +30,10 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
 
         let songList = new Array<Song>();
         let matches = this.getMatches(uri);
+        let msg;
         if(matches !== null){
             let response;
-            MessageSenderHelper.WriteSpotify(command.SenderChannel as TextChannel);
+            msg = await MessageSenderHelper.WriteSpotify(command.SenderChannel as TextChannel);
             switch(matches[1]){
                 case "track":
                      response = await this.GetTrack(matches[2]).catch((err : Error) => console.log(err.message));
@@ -48,6 +49,7 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
                     break;
             }
         }
+        msg?.delete();
         return songList;
     }
 

@@ -3,6 +3,7 @@ import { VoiceChannel, StreamOptions, VoiceConnection } from "discord.js";
 import {EventEmitter} from 'events';
 import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
+import { MessageSenderHelper } from "./MessageSenderHelper";
 
 export class Instance extends EventEmitter{
     private _playlist : Array<Song> = [];
@@ -50,10 +51,10 @@ export class Instance extends EventEmitter{
         if(this._playlist.length > 0){
 
             this.AbortAutodestruction();
-            let song = this._playlist.shift();
+            this._currentlyPlaying = this._playlist.shift();
             this._isPlaying = true;
-
-            this.PlaySound(song).finally(async() => {
+            MessageSenderHelper.PrintNowPlaying(this._currentlyPlaying);
+            this.PlaySound(this._currentlyPlaying).finally(async() => {
                 console.log('Music ended');
                 //Todo add nico
                 await this.PlayAnnouncer();
@@ -134,14 +135,16 @@ export class Instance extends EventEmitter{
             if(this._connection === null){
                 reject();
             }else{
-                const stream = song.GetStream();
-                this._connection?.play(stream, {type:"unknown"})
+                const stream = song.Stream;
+                let dispatcher = this._connection?.play(stream, {type:"unknown", highWaterMark:12, bitrate: "auto", volume: 0.5})
                 .on('error', (error : any) => {
                         console.error(error);
+                        dispatcher.destroy();
                         reject();
                     })
                     .on('speaking', (value : boolean) => { 
-                        if(!value){
+                        if(!value){ 
+                            dispatcher.destroy();
                             resolve();
                         }
                     });   

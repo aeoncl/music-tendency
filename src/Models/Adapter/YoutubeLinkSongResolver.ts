@@ -18,8 +18,9 @@ export class YoutubeSongResolver implements ISongResolver{
             const playlistItems = playlistInfo['items'];
 
             for(let playlistItemId in playlistItems){
-                let item : { title: String; url_simple: String; duration:string } = playlistItems[playlistItemId];
-                let song = new Song(item.url_simple,item.title,item.duration, command?.Sender , new YoutubeFileStreamProvider());
+
+                let item : { title: String; url_simple: String; duration:String; thumbnail: String } = playlistItems[playlistItemId];
+                let song = new Song(item.url_simple,item.title,item.duration as string,command, item.thumbnail , new YoutubeFileStreamProvider());
                 songList.push(song);
             }
 
@@ -27,7 +28,7 @@ export class YoutubeSongResolver implements ISongResolver{
             let urlIsValid = ytdl.validateURL(uri);
             if(urlIsValid){
                 const songInfo = await ytdl.getInfo(uri);
-                let song = new Song(songInfo.video_url,songInfo.title,songInfo.length_seconds, command?.Sender , new YoutubeFileStreamProvider());
+                let song = new Song(songInfo.video_url,songInfo.title,songInfo.length_seconds, command, songInfo.thumbnail.thumbnails[0], new YoutubeFileStreamProvider());
                 songList.push(song);
             }
         }
