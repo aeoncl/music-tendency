@@ -28,7 +28,7 @@ export class YoutubeSongResolver implements ISongResolver{
             let urlIsValid = ytdl.validateURL(uri);
             if(urlIsValid){
                 const songInfo = await ytdl.getInfo(uri);
-                let song = new Song(songInfo.video_url,songInfo.title,songInfo.length_seconds, command, songInfo.thumbnail.thumbnails[0], new YoutubeFileStreamProvider());
+                let song = new Song(songInfo.video_url,songInfo.title,parseInt(songInfo.length_seconds), command, songInfo.player_response.videoDetails.thumbnail.thumbnails[0].url, new YoutubeFileStreamProvider());
                 songList.push(song);
             }
         }

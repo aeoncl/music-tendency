@@ -1,6 +1,6 @@
 ```md
 # Music Tendency V2.1
-## Comandes
+## Commandes (merci gui)
 - play [Lien Youtube] [Lien Spotify] [Mot clés]
 > Permet d'ajouter une chanson ou une playlist dans la file
 - stop

@@ -7,7 +7,7 @@ import { Command } from "../Command";
 
 export class SongResolver implements ISongResolver{
 
-    private readonly _resolvers : Array<ISongResolver> = new Array<ISongResolver>(3);
+    private readonly _resolvers : Array<ISongResolver> = new Array<ISongResolver>();
     constructor(){
         this._resolvers.push(new YoutubeSongResolver());
         this._resolvers.push(new SpotifySongResolver());
