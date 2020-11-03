@@ -55,7 +55,7 @@ export class MusicTendency{
                 throw new NoMusicFound();
             }
         }catch(e){
-            throw new NoMusicFound();
+            throw new NoMusicFound(e.message);
         }
         
     }

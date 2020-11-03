@@ -8,13 +8,22 @@ const ytdl = require('ytdl-core');
 
 export class YoutubeSongResolver implements ISongResolver{
 
+    /*
+    Parse youtube link and retreive songs
+    [IN] URI
+    [IN] Command
+    [OUT] Promise<Song[]>
+    */
     async ResolveUri(uri: String, command: Command): Promise<Song[]>{
         let songList : Song[] = new Array<Song>();
-
-        let isPlaylist : boolean =  ytpl.validateURL(uri);
+        //let isPlaylist : boolean =  ytpl.validateId(ytpl.getPlaylistId(uri)); //Disabled Playlist
+        if(uri.includes("list")){
+            throw new Error("Playlists are temporary disabled, sorry. Our Minions are working to fix the issue.")
+        }
+        let isPlaylist = false;
         if(isPlaylist){
-            let playlistId = uri?.match(/(.+list=)([^&]+)/)[2];
-            const playlistInfo = await ytpl(playlistId);
+         let playlistId = uri?.match(/(.+list=)([^&]+)/)[2];
+         const playlistInfo = await ytpl(playlistId);
             const playlistItems = playlistInfo['items'];
 
             for(let playlistItemId in playlistItems){
@@ -28,7 +37,7 @@ export class YoutubeSongResolver implements ISongResolver{
             let urlIsValid = ytdl.validateURL(uri);
             if(urlIsValid){
                 const songInfo = await ytdl.getInfo(uri);
-                let song = new Song(songInfo.video_url,songInfo.title,parseInt(songInfo.length_seconds), command, songInfo.player_response.videoDetails.thumbnail.thumbnails[0].url, new YoutubeFileStreamProvider());
+                let song = new Song(songInfo.videoDetails.video_url,songInfo.videoDetails.title,parseInt(songInfo.videoDetails.lengthSeconds), command, songInfo.videoDetails.thumbnail.thumbnails[0].url, new YoutubeFileStreamProvider());
                 songList.push(song);
             }
         }

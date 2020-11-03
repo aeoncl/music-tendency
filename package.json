@@ -5,13 +5,16 @@
   "main": "/build/Bot.js",
   "repository": "https://github.com/D0vid/music-tendency",
   "dependencies": {
-    "@discordjs/opus": "^0.3.2",
+    "@discordjs/opus": "^0.3.3",
+    "@types/node-fetch": "^2.5.7",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1",
     "prism-media": "^1.2.2",
-    "ytdl-core": "^2.1.4",
-    "ytpl": "^0.1.21",
-    "ytsr": "^0.1.14"
+    "querystring": "^0.2.0",
+    "ytdl-core": "^4.0.3",
+    "ytpl": "^1.0.1",
+    "ytsr": "^1.0.4"
   },
   "devDependencies": {
     "@types/ws": "^7.2.3",

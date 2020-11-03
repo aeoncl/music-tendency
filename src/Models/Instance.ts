@@ -5,6 +5,9 @@ import { NoSongToSkipException } from "../Exceptions/NoSongToSkipException";
 import { NoSongToClearException } from "../Exceptions/NoSongToClearException";
 import { MessageSenderHelper } from "./MessageSenderHelper";
 
+/*
+    Instance of bot, one per server
+*/
 export class Instance extends EventEmitter{
     private _playlist : Array<Song> = [];
     private _isPlaying : boolean = false;
