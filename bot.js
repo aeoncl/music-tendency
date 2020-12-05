@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const cfg = require('./config.json');
 const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
+require('dotenv').config();
+
 const client = new Discord.Client;
 const queue = new Map();
 const token = process.env.BOT_TOKEN;
@@ -32,8 +34,6 @@ client.on('message', async message => {
     } else if (message.content.startsWith(`${cfg.prefix}clear`)) {
         clearQueue(message, serverQueue);
         return;
-    } else if (message.content.startsWith(`${cfg.prefix}help`)) {
-        displayHelp(message);
     }
 });
 
@@ -63,8 +63,9 @@ async function execute(message, serverQueue) {
         const playlistItems = playlistInfo['items'];
         playlistItems.forEach(item => playlistSongs.push({ title: item.title, url: item.url_simple }));
     } else {
-        const songInfo = await ytdl.getInfo(match[2]);
-        song = { title: songInfo.title, url: songInfo.video_url }
+        let test = match[2];
+        //const songInfo = await ytdl.getInfo(test);
+        song = { title: "", url: test }
     }
     
     if (!serverQueue) {
@@ -181,19 +182,6 @@ function clearQueue(message, serverQueue) {
     if (!message.member.voiceChannel) return message.channel.send('You have to be in a voice channel to clear the queue ¯\\_(ツ)_/¯');
     serverQueue.songs = [];
     return message.channel.send("Cleared the queue 🗑️");
-}
-
-function displayHelp(message) {
-    let helpMsg = "";
-    helpMsg += "Available commands : ℹ️\n";
-    helpMsg += "ℹ️ !help\n";
-    helpMsg += "▶ !play <youtube_url>\n";
-    helpMsg += "⏭ !skip\n";
-    helpMsg += "⏹ !stop\n";
-    helpMsg += "⏳ !queue\n";
-    helpMsg += "🗑️ !clear\n";
-
-    return message.channel.send(helpMsg);
 }
 
 client.login(token);

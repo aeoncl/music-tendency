@@ -1,0 +1,17 @@
+```md
+# Music Tendency V2.2
+🔴Les playlists et les liens Spotify sont temporairement HS
+## Commandes
+- play [Lien Youtube] [Mot clés]
+> Permet d'ajouter une chanson ou une playlist dans la file
+- stop
+> Arrête la lecture et vide la file
+- queue
+> Affiche les chansons dans la file
+- skip
+> Passe à la chanson suivante
+- leave
+> Renvoie le bot dans les oubliettes
+- help
+> ?????? 
+```
