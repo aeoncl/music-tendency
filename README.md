@@ -3,7 +3,7 @@
   - Supports Youtube links, queries and Spotify uris.
   - Volume normalization using ffmpeg loudnorm.
   - Custom stupid sounds when leaving a voice channel.
-  - Custom stupid jingle poping in between songs sometimes 8D
+  - Custom stupid jingle popping in between songs sometimes 8D
   
 # Main Dependencies
   - ffmpeg
