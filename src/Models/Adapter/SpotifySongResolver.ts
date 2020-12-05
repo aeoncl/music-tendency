@@ -22,6 +22,12 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         super();
     }
 
+    /*
+    Parse spotify uri and retrieves songs
+    [IN] uri : a query (playlist or song)
+    [IN] command
+    [OUT] A promise containing an array of Songs
+    */
     async ResolveUri(uri: String, command: Command): Promise<Song[]>{
 
         if(this._accessToken === null || this._accessToken?.ExpiresSoon()){
@@ -53,7 +59,13 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return songList;
     }
 
-    private async ResolveYoutubePlaylist(response: {items: []}, command: Command) {
+        /*
+        Turn spotify playlist into youtube URLs for playback
+        [IN] playlist spotify api response
+        [IN] command : Command
+        [OUT] Promise containing an array of Songs
+    */
+    private async ResolveYoutubePlaylist(response: {items: []}, command: Command) : Promise<Array<Song>>{
         let songList = new Array<Song>();
 
         for(let i in response.items){
@@ -67,7 +79,13 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return songList;
     }
 
-    private async ResolveYoutubeAlbum(response: {items: []}, command: Command) {
+    /*
+        Turn spotify album into youtube URLs for playback
+        [IN] album spotify api response
+        [IN] command : Command
+        [OUT] Promise containing an array of Songs
+    */
+    private async ResolveYoutubeAlbum(response: {items: []}, command: Command) : Promise<Array<Song>> {
         let songList = new Array<Song>();
         for(let i in response.items){
             let elem : {artists: Array<{name: String}>, name: String} = response.items[i];
@@ -79,12 +97,23 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
           return songList;
     }
 
+    /*
+        Turn spotify track into youtube URL for playback using superclass
+        [IN] track spotify api response
+        [IN] command : Command
+        [OUT] Promise containing an array of Songs
+    */
     private ResolveYoutubeTrack(response: {artists: Array<{name: String}>, name: String}, command: Command) : Promise<Array<Song>> {
         let artistName = response.artists[0].name;
         let songName = response.name;
         return super.ResolveUri(`${artistName} ${songName}`, command);
     }
 
+    /*
+        Spotify API Endpoint get track info
+        [in] trackId
+        [OUT] Promise
+    */
     GetTrack(trackId: string) {
         const options = {
             hostname: 'api.spotify.com',
@@ -98,6 +127,11 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return this.SendGetRequest(options as any);
     }
 
+    /*
+        Spotify API Endpoint get playlist info
+        [in] platlistId
+        [OUT] Promise
+    */
     GetPlaylistTracks(playlistId: string) {
         const options = {
             hostname: 'api.spotify.com',
@@ -111,6 +145,11 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return this.SendGetRequest(options as any);
     }
 
+    /*
+        Spotify API Endpoint get album info
+        [in] albumId
+        [OUT] Promise
+    */
     GetAlbumTracks(albumId: string) {
         const options = {
             hostname: 'api.spotify.com',
@@ -124,7 +163,12 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return this.SendGetRequest(options as any);
     }
 
-    private getMatches(str : String){
+    /*
+        regex Parse Spotify URL or URI
+        [in] str: uri
+        [OUT] RegExpMatchArray
+    */
+    private getMatches(str : String) : RegExpMatchArray{
         try{
             return str.match(new RegExp(this._regex.source, this._regex.flags))
             .map(match => 
@@ -136,7 +180,7 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         }
     }
 
-    private SendGetRequest(options: RequestOptions){
+    private SendGetRequest(options: RequestOptions) :  Promise<String>{
         let requestPromise = new Promise<String>((resolve, reject) => {
             
             const req = https.get(options as any, (res) => {
@@ -160,7 +204,11 @@ export class SpotifySongResolver extends YoutubeSearchSongResolver implements IS
         return requestPromise;
     }
 
-    private GetAccessTokenAsync(){
+    /*
+        Retrieves Spotify API Token
+        [OUT] Promise of SpotifyAuthToken
+    */
+    private GetAccessTokenAsync() : Promise<SpotifyAuthToken> {
         let promiseTest = new Promise<SpotifyAuthToken>((resolve, reject) => {
             const postData : string = querystring.stringify({
                 grant_type: "client_credentials"

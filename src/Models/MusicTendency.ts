@@ -49,13 +49,13 @@ export class MusicTendency{
         try {
             let listSongs = await this._songResolver.ResolveUri(command.CommandData[0], command);
             if(listSongs.length > 0){
-                    MessageSenderHelper.WriteSongAdded(command.SenderChannel as TextChannel);
+                MessageSenderHelper.WriteSongAdded(command.SenderChannel as TextChannel);
                 instance.AddSongs(listSongs);
             }else{
                 throw new NoMusicFound();
             }
         }catch(e){
-            throw new NoMusicFound();
+            throw new NoMusicFound(e.message);
         }
         
     }
@@ -63,7 +63,11 @@ export class MusicTendency{
     private Skip(command : Command){
         let instance = this.GetInstanceForCommand(command);
         try{
-            instance.Skip();
+            if(instance.Queue.length === 0){
+                instance.Stop();
+            }else{
+                instance.Skip();
+            }
             MessageSenderHelper.WriteSkip(command.SenderChannel as TextChannel);
         }catch(e){
             MessageSenderHelper.PrintError(e.message, command.SenderChannel as TextChannel);
