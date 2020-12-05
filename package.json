@@ -6,7 +6,6 @@
   "repository": "https://github.com/D0vid/music-tendency",
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
-    "@types/node-fetch": "^2.5.7",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1",
@@ -19,6 +18,7 @@
   "devDependencies": {
     "@types/ws": "^7.2.3",
     "@types/node": "^13.11.0",
+    "@types/node-fetch": "^2.5.7",
     "nodemon": "^2.0.2",
     "ts-node": "^8.8.2",
     "typescript": "^3.8.3",
