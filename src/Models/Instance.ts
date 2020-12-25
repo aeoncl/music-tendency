@@ -148,7 +148,7 @@ export class Instance extends EventEmitter{
                     .on('speaking', (value : boolean) => { 
                         if(!value){ 
                             dispatcher.destroy();
-                            resolve();
+                            resolve(null);
                         }
                     });   
             }

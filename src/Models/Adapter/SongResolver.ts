@@ -13,9 +13,9 @@ export class SongResolver implements ISongResolver{
 
     constructor(){
         this._resolvers.push(new YoutubeSongResolver());
-        //this._resolvers.push(new SpotifySongResolver());
-        //this._resolvers.push(new YoutubeSearchSongResolver());
-        this._resolvers.push(new YoutubeSearchSongResolverTwo());
+        this._resolvers.push(new SpotifySongResolver());
+        this._resolvers.push(new YoutubeSearchSongResolver());
+        //this._resolvers.push(new YoutubeSearchSongResolverTwo());
     }
 
     /*

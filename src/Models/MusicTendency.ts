@@ -81,7 +81,7 @@ export class MusicTendency{
             instance.Stop();
             instance.Close();
         }catch(e){
-            MessageSenderHelper.PrintError(e, command.SenderChannel as TextChannel);
+            MessageSenderHelper.PrintError(e.message, command.SenderChannel as TextChannel);
         }
     }
 
@@ -91,7 +91,7 @@ export class MusicTendency{
             instance.Stop();
             MessageSenderHelper.PrintStop(command.SenderChannel as TextChannel);
         }catch(e){
-            MessageSenderHelper.PrintError(e, command.SenderChannel as TextChannel);
+            MessageSenderHelper.PrintError(e.message, command.SenderChannel as TextChannel);
         }
     }
 
@@ -101,7 +101,7 @@ export class MusicTendency{
             instance.Clear();
             MessageSenderHelper.WriteClear(command.SenderChannel as TextChannel);
         }catch(e){
-            MessageSenderHelper.PrintError(e, command.SenderChannel as TextChannel);
+            MessageSenderHelper.PrintError(e.message, command.SenderChannel as TextChannel);
         }
     }
    
