@@ -37,8 +37,8 @@ export class FFmpegEncoder implements IMusicEncoder{
         const opus = new prism.opus.Encoder({ rate: 48000, channels: 2, frameSize: 960 });
         this._transcoder = transcoder;
         let test = stream.pipe(this._transcoder).pipe(opus);
-       //return test;
-     return stream;
+       return opus;
+     //return stream;
     }
 
     testStuff(){
