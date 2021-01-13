@@ -139,7 +139,7 @@ export class Instance extends EventEmitter{
                 reject();
             }else{
                 const stream = song.Stream;
-                let dispatcher = this._connection?.play(stream, {type:"opus", highWaterMark:12, bitrate: "auto", volume: 0.5})
+                let dispatcher = this._connection?.play(stream, {type:"opus", highWaterMark:20, bitrate: 48000, volume: 0.5})
                 .on('error', (error : any) => {
                         console.error(error);
                         dispatcher.destroy();
