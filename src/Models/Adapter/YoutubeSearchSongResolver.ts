@@ -5,6 +5,13 @@ import { YoutubeFileStreamProvider } from "../Providers/YoutubeFileStreamProvide
 const ytsr = require('ytsr');
 
 export class YoutubeSearchSongResolver implements ISongResolver{
+
+    /*
+        Search youtube with query and find song
+        [IN] uri
+        [IN] Command
+        [OUT] Songs
+    */
     async ResolveUri(uri: String, command: Command): Promise<Song[]>{
         let songList : Song[] = new Array<Song>();
         let results : any = await YoutubeSearchSongResolver.searchYoutube(uri);
@@ -12,25 +19,17 @@ export class YoutubeSearchSongResolver implements ISongResolver{
         //type: movie, video
 
         for(let i in results.items){
-            let current : {type: string, link: string, title: string, duration: string, thumbnail: string} = results.items[i];
+            let current : {type: string, url: string, title: string, duration: string, thumbnails: any[]} = results.items[i];
             if(current.type === "video"){
-                songList.push(new Song(current.link, current.title, current.duration, command, current.thumbnail, new YoutubeFileStreamProvider()));
+                songList.push(new Song(current.url, current.title, current.duration, command, current.thumbnails[0].url, new YoutubeFileStreamProvider()));
                 break;
             }
         }
         return songList;
     }
-
+    
     static searchYoutube(uri: String){
-        let searchPromise = new Promise((resolve, reject) => {
-            ytsr(uri, {limit:5, safeSearch: false}, (err: Error, searchResults: any) => {
-                if(err){
-                    reject(err);
-                }
-                resolve(searchResults);
-            });
-        });
-        return searchPromise;
+            return ytsr(uri, {limit:5, safeSearch: false});
     }
 
 }

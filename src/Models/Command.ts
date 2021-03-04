@@ -2,6 +2,9 @@ import { prefix } from "../config.json";
 import { CommandType } from "./CommandType";
 import { VoiceChannel, TextChannel, DMChannel } from "discord.js";
 
+/*
+Represents a music tendency command
+*/
 export class Command{
     
     private static readonly aliases : Map<String, String[]> = new Map<String, String[]>();
